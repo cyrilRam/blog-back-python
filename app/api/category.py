@@ -4,19 +4,19 @@ from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 
 from app.db.config import get_db
-from app.schemas.Post import Post
+from app.service import CategoryService
 
 router = APIRouter()
 db_dependency = Annotated[Session, Depends(get_db)]
 
 
-# @router.get("/all_posts")
-# async def get_all_posts(db: db_dependency):
-#     try:
-#         list_post = Post.get_all(db)
-#         return list_post
-#     except Exception as e:
-#         raise HTTPException(status_code=500, detail=e)
+@router.get("")
+async def get_all(db: db_dependency):
+    try:
+        list_category = CategoryService.get_all(db)
+        return list_category
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=e)
 #
 #
 # @router.post("create_post")

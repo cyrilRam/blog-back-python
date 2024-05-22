@@ -6,8 +6,7 @@ from app.api import posts, category
 app = FastAPI()
 
 app.include_router(posts.router, prefix="/v1/posts", tags=["API posts"])
-app.include_router(category.router, prefix="/v1/posts", tags=["API category"])
-
+app.include_router(category.router, prefix="/v1/categories", tags=["API category"])
 
 origin = ["http://localhost:4200"]
 
