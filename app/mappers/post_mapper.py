@@ -1,5 +1,6 @@
 from app.db.models import Post as ModelPost
-from app.schemas.Category import Category
+from app.mappers.category_mapper import CategoryMapper
+
 from app.schemas.Post import Post
 
 
@@ -11,6 +12,6 @@ class PostMapper:
             title=model.title,
             content=model.content,
             created_date=model.created_date,
-            category=Category.from_orm(model.category)
+            category=CategoryMapper.from_orm_to_schema(model.category)
         )
         return post
