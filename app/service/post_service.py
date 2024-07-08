@@ -5,12 +5,14 @@ from fastapi import HTTPException
 from sqlalchemy.orm import Session
 
 from app.db.models import Post as ModelPost
+from app.mappers.post_mapper import PostMapper
 from app.schemas.Post import Post, PostDto
 
 
 def get_all(db) -> [Post]:
     list_models = db.query(ModelPost).order_by(ModelPost.created_date.desc()).all()
-    list_schemas = [Post.from_orm(post) for post in list_models]
+    list_schemas = [PostMapper.from_orm_to_schema(post) for post in list_models]
+
     return list_schemas
 
 
@@ -21,7 +23,7 @@ def add_post(db: Session, post_to_add: PostDto) -> Post:
         db.add(model_post)
         db.commit()
         db.refresh(model_post)
-        post = Post.from_orm(model_post)
+        post = PostMapper.from_orm_to_schema(model_post)
         return post
     except Exception as e:
         db.rollback()
@@ -40,7 +42,7 @@ def update_post(db: Session, post_id: str, post_data: PostDto) -> Post:
 
         db.commit()
         db.refresh(post_model)
-        post = Post.from_orm(post_model)
+        post = PostMapper.from_orm_to_schema(post_model)
         return post
     except Exception as e:
         db.rollback()
