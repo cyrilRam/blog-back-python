@@ -7,6 +7,7 @@ from sqlalchemy.orm import Session
 from app.db.models import Post as ModelPost
 from app.mappers.post_mapper import PostMapper
 from app.schemas.Post import Post, PostDto
+from app.utils.exceptions import ObjectNotFound
 
 
 def get_all(db) -> [Post]:
@@ -34,7 +35,7 @@ def update_post(db: Session, post_id: str, post_data: PostDto) -> Post:
     try:
         post_model: Any = db.query(ModelPost).filter(ModelPost.id == post_id).first()
         if not post_model:
-            raise HTTPException(status_code=404, detail="Post non trouvé")
+            raise ObjectNotFound(Post, post_id)
 
         post_model.title = post_data.title
         post_model.content = post_data.content

@@ -2,8 +2,11 @@ import os
 
 from dotenv import load_dotenv
 from sqlalchemy import create_engine
+from sqlalchemy.exc import OperationalError
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
+
+from app.utils.exceptions import ErrorConnectionDB
 
 load_dotenv()
 DB_USER = os.getenv("DB_USER")
@@ -23,5 +26,7 @@ def get_db():
     db = SessionLocal()
     try:
         yield db
+    except OperationalError as e:
+        raise ErrorConnectionDB(str(e))
     finally:
         db.close()
